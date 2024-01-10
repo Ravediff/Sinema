@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tv_details.css">
+    <title>TV Show Details</title>
+</head>
+<body>
+    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
+    <div id="background-container"></div>
+    <div id="tv-details-container">
+		<div class="season-episode-selector" id="season-episode-selector">
+            <!-- Add your season and episode selector dropdowns here -->
+            Season:
+            <select id="seasonSelector">
+                <!-- Options for seasons will be dynamically added here -->
+            </select>
+            Episode:
+            <select id="episodeSelector">
+                <!-- Options for episodes will be dynamically added here -->
+            </select>
+        </div>
+        <!-- TV show details will be dynamically added here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Retrieve TV show ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const tvShowId = urlParams.get('id');
+
+            // Check if TV show ID is available
+            if (tvShowId) {
+                // Fetch TV show details using the TV show ID
+                fetchTVShowDetails(tvShowId)
+                    .then(displayTVShowDetails)
+                    .catch((error) => console.error('Error fetching TV show details:', error));
+            } else {
+                console.error('TV show ID not found in the URL.');
+            }
+        });
+
+        async function fetchTVShowDetails(tvShowId) {
+            const apiKey = '0e1a4d969bc043a99a76f16143ed629b';
+            const baseUrl = 'https://api.themoviedb.org/3';
+
+            try {
+                const response = await fetch(`${baseUrl}/tv/${tvShowId}?api_key=${apiKey}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch TV show details');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        function displayTVShowDetails(tvShowDetails) {
+            const tvDetailsContainer = document.getElementById('tv-details-container');
+            const backgroundContainer = document.getElementById('background-container');
+
+            // Check if the container elements exist
+            if (!tvDetailsContainer || !backgroundContainer) {
+                console.error('TV show details or background container not found.');
+                return;
+            }
+
+            // Clear previous content
+            tvDetailsContainer.innerHTML = '';
+
+            // Create a new div for TV show details
+            const detailsDiv = document.createElement('div');
+
+            // Create elements to display TV show details
+            const nameElement = document.createElement('h1');
+            nameElement.textContent = tvShowDetails.name;
+
+            const firstAirDateElement = document.createElement('p');
+            firstAirDateElement.textContent = `First Air Date: ${tvShowDetails.first_air_date}`;
+
+            const overviewElement = document.createElement('p');
+            overviewElement.textContent = `Overview: ${tvShowDetails.overview}`;
+
+            const voteAverageElement = document.createElement('p');
+            voteAverageElement.textContent = `Vote Average: ${tvShowDetails.vote_average}`;
+
+            const tvShowCoverElement = document.createElement('img');
+            tvShowCoverElement.src = `https://image.tmdb.org/t/p/w500${tvShowDetails.poster_path}`;
+            tvShowCoverElement.alt = tvShowDetails.name;
+            // Add the 'tv-show-cover' class to the image element
+            tvShowCoverElement.classList.add('tv-show-cover');
+
+            // Create a new div for dropdowns
+            const dropdownDiv = document.createElement('div');
+
+            // Create a dropdown for seasons
+            const seasonLabel = document.createElement('label');
+            seasonLabel.textContent = 'Select Season: ';
+            const seasonDropdown = document.createElement('select');
+            seasonDropdown.id = 'seasonDropdown';
+
+            // Populate season dropdown dynamically based on available data
+            for (let i = 1; i <= tvShowDetails.number_of_seasons; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Season ${i}`;
+                seasonDropdown.appendChild(option);
+            }
+
+            // Create a dropdown for episodes
+            const episodeLabel = document.createElement('label');
+            episodeLabel.textContent = 'Select Episode: ';
+            const episodeDropdown = document.createElement('select');
+            episodeDropdown.id = 'episodeDropdown';
+
+            // Initial population of episode dropdown based on the first season
+            populateEpisodesDropdown(tvShowDetails, episodeDropdown, 1);
+
+            // Add change event listener to season dropdown
+            seasonDropdown.addEventListener('change', function () {
+                const selectedSeason = parseInt(seasonDropdown.value);
+                // Populate episode dropdown based on the selected season
+                populateEpisodesDropdown(tvShowDetails, episodeDropdown, selectedSeason);
+            });
+
+            // Create an img element for the play button
+            const playButton = document.createElement('img');
+            playButton.id = 'playButton';
+            playButton.src = '../img/play.png'; // Replace with the path to your play button image
+            playButton.alt = 'Play Trailer';
+
+            // Add a click event listener to the play button
+            playButton.addEventListener('click', function () {
+                // Retrieve selected season and episode values
+                const selectedSeason = parseInt(seasonDropdown.value);
+                const selectedEpisode = parseInt(episodeDropdown.value);
+                // Redirect to TV show play page with the selected TV show ID, season, and episode
+                window.location.href = `tv_play.html?id=${tvShowDetails.id}&season=${selectedSeason}&episode=${selectedEpisode}`;
+            });
+
+            // Append elements to the dropdownDiv
+            dropdownDiv.appendChild(seasonLabel);
+            dropdownDiv.appendChild(seasonDropdown);
+            dropdownDiv.appendChild(episodeLabel);
+            dropdownDiv.appendChild(episodeDropdown);
+            // Append play button to the dropdownDiv
+            dropdownDiv.appendChild(playButton);
+
+            // Append dropdownDiv to the tvDetailsContainer
+            tvDetailsContainer.appendChild(dropdownDiv);
+
+            // Append TV show cover image to the container
+            tvDetailsContainer.appendChild(tvShowCoverElement);
+
+            // Append elements to the detailsDiv
+            detailsDiv.appendChild(nameElement);
+            detailsDiv.appendChild(firstAirDateElement);
+            detailsDiv.appendChild(overviewElement);
+            detailsDiv.appendChild(voteAverageElement);
+
+            // Append TV show details and cover image to the container
+            tvDetailsContainer.appendChild(detailsDiv);
+
+            // Set background image
+            backgroundContainer.style.backgroundImage = `url('https://image.tmdb.org/t/p/w1280${tvShowDetails.backdrop_path}')`;
+        }
+
+        function populateEpisodesDropdown(tvShowDetails, dropdown, selectedSeason) {
+            // Clear existing options
+            dropdown.innerHTML = '';
+
+            // Find the selected season
+            const season = tvShowDetails.seasons.find(s => s.season_number === selectedSeason);
+
+            // Populate episode dropdown dynamically based on available data for the selected season
+            if (season) {
+                for (let i = 1; i <= season.episode_count; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Episode ${i}`;
+                    dropdown.appendChild(option);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

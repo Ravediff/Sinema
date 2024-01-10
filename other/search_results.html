@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="search_results.css" rel="stylesheet" type="text/css">
+  <title>Search Results</title>
+  <style>
+	body {
+	  background-image: url('../img/Background.jpg');
+	  background-size: cover;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  color: #333;
+	  font-family: 'Arial', sans-serif;
+	  margin: 0;
+	  padding: 0;
+	  overflow-x: hidden;
+	}
+
+	.logo {
+	  width: 119px;
+	  height: 40px;
+	  order: 1;
+	  position: fixed;
+	  top: 10px;
+	  left: 10px;
+	  z-index: 1;
+	  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5); /* Black shadow */
+	  background-color: rgba(0,0,0,0.7) /* Add a background color to make the shadow visible */
+	}
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+	.movie-card {
+	  cursor: pointer;
+	  transition: transform 0.2s ease-in-out;
+	  height: 300px; /* Set a fixed height for the movie cards */
+	  display: flex;
+	  flex-direction: column;
+	  overflow: hidden; /* Hide any overflowing content */
+	}
+
+	.movie-card:hover {
+	  transform: scale(1.05);
+	}
+
+	.movie-details {
+	  text-align: center;
+	  margin-bottom: 10px;
+	  height: 100%; /* Set a fixed height for the movie details section */
+	}
+
+	.movie-details p {
+		color: white;
+	  font-size: 16px;
+	  line-height: 1.5;
+	  margin: 0; /* Remove default margin to ensure consistent spacing */
+	}
+
+	.movie-details img {
+	  max-width: 100%;
+	  height: 100%; /* Adjust the image height to fill the entire .movie-details section */
+	  object-fit: cover; /* Ensure the image covers the entire space without stretching */
+	  border-radius: 8px;
+	}
+
+
+  </style>
+</head>
+<body>
+	<div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
+  <div class="container">
+    <h1>Search Results</h1>
+    <div id="results-container" class="grid-container"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('q');
+
+      if (query) {
+        fetchSearchResults(query)
+          .then(displayResults)
+          .catch((error) => console.error('Error fetching search results:', error));
+      } else {
+        console.error('Search query not found in the URL.');
+      }
+    });
+
+    async function fetchSearchResults(query) {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=0e1a4d969bc043a99a76f16143ed629b&query=${query}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch search results');
+        }
+        const data = await response.json();
+        return data.results;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    function displayResults(results) {
+      const resultsContainer = document.getElementById('results-container');
+
+      // Clear previous content
+      resultsContainer.innerHTML = '';
+
+      // Create a grid item for each result
+      results.forEach(result => {
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('movie-card');
+
+        const resultDetails = document.createElement('div');
+        resultDetails.classList.add('movie-details');
+        resultDetails.innerHTML = `
+          <p>${result.title || result.name} (${getReleaseYear(result.release_date || result.first_air_date)})</p>
+        `;
+        gridItem.appendChild(resultDetails);
+
+        const resultPoster = document.createElement('img');
+        resultPoster.src = `https://image.tmdb.org/t/p/w500${result.poster_path}`;
+        resultPoster.alt = result.title || result.name;
+        gridItem.appendChild(resultPoster);
+
+        // Add a click event listener to each grid item
+        gridItem.addEventListener('click', function () {
+          if (result.media_type === 'movie') {
+            window.location.href = `movie_details.html?id=${result.id}`;
+          } else if (result.media_type === 'tv') {
+            window.location.href = `tv_details.html?id=${result.id}`;
+          }
+        });
+
+        resultsContainer.appendChild(gridItem);
+      });
+    }
+
+    function getReleaseYear(dateString) {
+      const year = new Date(dateString).getFullYear();
+      return isNaN(year) ? 'N/A' : year;
+    }
+  </script>
+</body>
+</html>
+

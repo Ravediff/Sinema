@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tv_play.css">
+    <title>TV Play</title>
+</head>
+<body>
+    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
+    <div id="background-container"></div>
+    <div id="tv-play-container">
+        <!-- TV play iframe will be dynamically added here -->
+    </div>
+    <button id="nextButton">Next Episode</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Retrieve TV show ID, season number, and episode number from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const tvShowId = urlParams.get('id');
+            const seasonNumber = parseInt(urlParams.get('season'));
+            const episodeNumber = parseInt(urlParams.get('episode'));
+
+            // Check if TV show ID, season number, and episode number are available
+            if (tvShowId && !isNaN(seasonNumber) && !isNaN(episodeNumber)) {
+                // Fetch TV show play details using the TV show ID, season number, and episode number
+                fetchTVPlayDetails(tvShowId, seasonNumber, episodeNumber)
+                    .then(displayTVPlayDetails)
+                    .catch((error) => console.error('Error fetching TV play details:', error));
+            } else {
+                console.error('TV show ID, season number, or episode number not found in the URL.');
+            }
+
+            const nextButton = document.getElementById('nextButton');
+            if (nextButton) {
+                // Add a click event listener to the "Next Episode" button
+                nextButton.addEventListener('click', function () {
+                    // Redirect to the next episode with an incremented episode number
+                    window.location.href = `tv_play.html?id=${tvShowId}&season=${seasonNumber}&episode=${episodeNumber + 1}`;
+                });
+            }
+        });
+
+        async function fetchTVPlayDetails(tvShowId, seasonNumber, episodeNumber) {
+            // You can fetch additional details if needed
+            // For simplicity, we will directly use the TV show ID, season number, and episode number in the iframe
+            return { tvShowId, seasonNumber, episodeNumber };
+        }
+
+        function displayTVPlayDetails(tvPlayDetails) {
+            const tvPlayContainer = document.getElementById('tv-play-container');
+
+            // Check if the container element exists
+            if (!tvPlayContainer) {
+                console.error('TV play container not found.');
+                return;
+            }
+
+            // Create an iframe for playing the TV show episode
+            const tvIframe = document.createElement('iframe');
+            tvIframe.src = `https://vidsrc.me/embed/tv?tmdb=${tvPlayDetails.tvShowId}&season=${tvPlayDetails.seasonNumber}&episode=${tvPlayDetails.episodeNumber}`;
+            tvIframe.style.width = '100%';
+            tvIframe.style.height = '100%';
+            tvIframe.frameBorder = '0';
+            tvIframe.referrerPolicy = 'origin';
+            tvIframe.allowFullscreen = true;
+
+            // Append the iframe to the container
+            tvPlayContainer.appendChild(tvIframe);
+        }
+    </script>
+</body>
+</html>
+

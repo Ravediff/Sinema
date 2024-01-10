@@ -1,0 +1,97 @@
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.logo {
+  width: 119px;
+  height: 40px;
+  order: 1;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5); /* Black shadow */
+  background-color: rgba(0, 0, 0, 0.7); /* Add a background color to make the shadow visible */
+}
+
+#background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  filter: blur(10px);
+}
+
+#tv-details-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
+  overflow: hidden; /* Add overflow property to fix the background visibility issue */
+}
+
+.season-episode-selector {
+  position: absolute;
+  top: 10px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+  display: flex; /* Make the dropdowns and button align horizontally */
+  flex-direction: row; /* Align items in a row */
+  align-items: center; /* Center items vertically */
+}
+
+/* Adjust the margin-right property to create space between the drop-downs */
+#seasonDropdown, #episodeDropdown {
+  margin-right: 200px; /* Adjust as needed */
+}
+
+#playButton {
+  cursor: pointer;
+  width: 10%;
+}
+
+
+#playButton {
+  position: absolute;
+  top: 10%; /* Adjust as needed */
+  left: 93%; /* Adjust as needed */
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  width: 10%;
+}
+
+#playButton:hover {
+  opacity: 0.8; /* Adjust the opacity on hover as needed */
+}
+
+.tv-show-cover {
+  width: 30%; /* Use 100% width for responsiveness */
+  max-width: 100%; /* Ensure the image does not exceed its original size */
+  height: auto; /* Maintain the aspect ratio */
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  padding-right: 900px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+

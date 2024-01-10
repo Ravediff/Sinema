@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinema | Home</title>
+<link rel="stylesheet" href="home.css">
+  
+<style>
+    .suggestion-option {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+    }
+
+    .suggestion-img {
+      width: 30px;
+      height: 40px;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .suggestion-text {
+      flex-grow: 1;
+    }
+  </style>
+
+  <script type="text/javascript">
+const apiKey = '0e1a4d969bc043a99a76f16143ed629b';
+    const baseUrl = 'https://api.themoviedb.org/3';
+
+    async function fetchSuggestions(query) {
+		try {
+			const response = await fetch(`${baseUrl}/search/multi?api_key=${apiKey}&query=${query}`);
+			if (!response.ok) {
+				throw new Error('Failed to fetch suggestions');
+			}
+			const data = await response.json();
+			return data.results;
+		} catch (error) {
+			console.error('Error fetching suggestions:', error);
+			return [];
+		}
+	}
+
+
+
+
+    function handleSearchInput(value) {
+      if (value.trim() === '') {
+        document.getElementById('suggestions').innerHTML = '';
+        return;
+      }
+
+      fetchSuggestions(value)
+        .then(displaySuggestions)
+        .catch((error) => console.error('Error fetching suggestions:', error));
+    }
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+  </script>
+</head>
+<body onLoad="MM_preloadImages('../img/roll/nextscroll.png','../img/roll/backscroll.png')">
+  <div class="container">
+    <div class="header">
+		  <div class="dropdown">
+			<img class="dropbtn" src="../img/dropdown.png" alt="Dropdown">
+			<div class="dropdown-content">
+			  <!-- Genre Section -->
+			  <div class="dropdown-section" onmouseover="showDropdown('genre')" onmouseout="hideDropdown('genre')">
+				<p class="section-title">Genre</p>
+				<!-- Nested Genre Dropdown -->
+				<div class="nested-dropdown-content" id="genreDropdown">
+				    <a href="search_results.html?q=genre:Action" target="_blank">Action</a>
+  					<a href="search_results.html?q=genre=Drama" target="_blank">Drama</a>
+				  <!-- Add more genre options as needed -->
+				</div>
+			  </div>
+
+			  <!-- Type Section -->
+			  <div class="dropdown-section" onmouseover="showDropdown('type')" onmouseout="hideDropdown('type')">
+				<p class="section-title">Type</p>
+				<!-- Nested Type Dropdown -->
+				<div class="nested-dropdown-content" id="typeDropdown">
+				  	<a href="search_results.html?q=type=movie" target="_blank">Movies</a>
+  					<a href="search_results.html?q=type=tv" target="_blank">TV Series</a>
+				  <!-- Add more type options as needed -->
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+      <img class="logo" src="../img/LOGO.png" alt="Logo">
+      <div class="search-bar">
+        <img src="../img/searchbar.png" alt="Search Image" height="7%" class="search-image">
+        <input
+          id="search-input"
+          class="search-input"
+          type="text"
+          placeholder="Search..."
+          oninput="handleSearchInput(this.value)"
+          list="suggestions"
+        />
+        <img src="../img/searchbut.png" alt="Search Button" width="82" height="63" class="search-button">
+        <div id="suggestions-container"></div>
+      </div>
+    </div>
+	
+
+    <div class="latest-content">
+      <h2>Latest Movies</h2>
+      <div class="title-bar"></div>
+      <div id="latest-movies-container" class="movies-container"></div>
+      <a href="#" id="movie-scroll-left-link" class="scroll-button" onMouseOver="MM_swapImage('movie-scroll-left-button','','../img/roll/backscroll.png',1)" onMouseOut="MM_swapImgRestore()">
+        <img src="../img/backscroll.png" alt="scroll left" width="30" height="30" id="movie-scroll-left-button">
+      </a>
+
+      <a href="#" id="movie-scroll-right-link" class="scroll-button" onMouseOver="MM_swapImage('movie-scroll-right-button','','../img/roll/nextscroll.png',1)" onMouseOut="MM_swapImgRestore()">
+        <img src="../img/nextscroll.png" alt="scroll right" width="30" height="30" id="movie-scroll-right-button">
+      </a>
+    </div>
+
+    <div class="latest-content">
+      <h2>Latest TV Shows</h2>
+      <div class="title-bar"></div>
+      <div id="latest-tv-container" class="movies-container"></div>
+      <a href="#" id="tv-scroll-left-link" class="scroll-button" onMouseOver="MM_swapImage('tv-scroll-left-button','','../img/roll/backscroll.png',1)" onMouseOut="MM_swapImgRestore()">
+        <img src="../img/backscroll.png" alt="scroll left" width="30" height="30" id="tv-scroll-left-button">
+      </a>
+
+      <a href="#" id="tv-scroll-right-link" class="scroll-button" onMouseOver="MM_swapImage('tv-scroll-right-button','','../img/roll/nextscroll.png',1)" onMouseOut="MM_swapImgRestore()">
+        <img src="../img/nextscroll.png" alt="scroll right" width="30" height="30" id="tv-scroll-right-button">
+      </a>
+    </div>
+  </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const apiKey = '0e1a4d969bc043a99a76f16143ed629b';
+    const baseUrl = 'https://api.themoviedb.org/3';
+	  
+	  
+	function showGenreDropdown() {
+	  document.getElementById("genreDropdown").style.display = "block";
+	}
+
+	function hideGenreDropdown() {
+	  document.getElementById("genreDropdown").style.display = "none";
+	}
+	  
+    function fetchAndDisplay(type, containerId) {
+      fetch(`${baseUrl}/${type}/popular?api_key=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          if (type === 'movie') {
+            displayMovies(data.results, containerId);
+          } else if (type === 'tv') {
+            displayTVShows(data.results, containerId);
+          }
+        })
+        .catch(error => console.error(`Error fetching latest ${type}:`, error));
+    }
+
+		function redirectToSearch(option, value) {
+		  const searchInput = document.getElementById('search-input');
+
+		  // Set the search input value based on the selected option
+		  if (option === 'genre') {
+			// You can modify this to include the genre in the search query
+			searchInput.value = value + ' genre';
+		  } else if (option === 'type') {
+			// Set the search input value to either 'movie' or 'tv' based on the selection
+			searchInput.value = value;
+		  }
+
+		  // Redirect to the search_results.html page with the search query
+		  window.location.href = `search_results.html?q=${encodeURIComponent(searchInput.value)}`;
+		}
+		// Inside the displayMovies function
+		function displayMovies(movies, containerId) {
+		  const moviesContainer = document.getElementById(containerId);
+
+		  movies.forEach(movie => {
+			const movieCard = document.createElement('div');
+			movieCard.classList.add('movie-card');
+
+			const movieDetails = document.createElement('div');
+			movieDetails.classList.add('movie-details');
+			movieDetails.innerHTML = `
+			  <p>${movie.title} (${getReleaseYear(movie.release_date)})</p>
+			`;
+			movieCard.appendChild(movieDetails);
+
+			const moviePoster = document.createElement('img');
+			moviePoster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+			moviePoster.alt = movie.title;
+			movieCard.appendChild(moviePoster);
+
+			// Add a click event listener to each movie card
+			movieCard.addEventListener('click', function () {
+			  // Redirect to movie details page with the selected movie ID
+			  window.location.href = `movie_details.html?id=${movie.id}`;
+			});
+
+			moviesContainer.appendChild(movieCard);
+		  });
+		}
+
+		// Inside the displayTVShows function
+		function displayTVShows(tvShows, containerId) {
+		  const tvContainer = document.getElementById(containerId);
+
+		  tvShows.forEach(show => {
+			const showCard = document.createElement('div');
+			showCard.classList.add('movie-card');
+
+			const showDetails = document.createElement('div');
+			showDetails.classList.add('movie-details');
+			showDetails.innerHTML = `
+			  <p>${show.name} (${getReleaseYear(show.first_air_date)})</p>
+			`;
+			showCard.appendChild(showDetails);
+
+			const showPoster = document.createElement('img');
+			showPoster.src = `https://image.tmdb.org/t/p/w500${show.poster_path}`;
+			showPoster.alt = show.name;
+			showCard.appendChild(showPoster);
+
+			// Add a click event listener to each TV series card
+			showCard.addEventListener('click', function () {
+			  // Redirect to TV series details page with the selected TV series ID
+			  window.location.href = `tv_details.html?id=${show.id}`;
+			});
+
+			tvContainer.appendChild(showCard);
+		  });
+		}
+
+
+    function getReleaseYear(dateString) {
+      const year = new Date(dateString).getFullYear();
+      return isNaN(year) ? 'N/A' : year;
+    }
+
+    const scrollButtons = document.querySelectorAll('.scroll-button');
+
+    scrollButtons.forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const containerId = button.id.includes('tv') ? 'latest-tv-container' : 'latest-movies-container';
+        const container = document.getElementById(containerId);
+
+        container.scrollBy({
+          left: button.id.includes('left') ? -200 : 200,
+          behavior: 'smooth',
+        });
+      });
+    });
+
+		  const searchInput = document.getElementById('search-input');
+		  const suggestionsContainer = document.getElementById('suggestions-container');
+		  const searchButton = document.querySelector('.search-button');
+
+		  searchInput.addEventListener('input', async function () {
+			const value = this.value.trim();
+
+			if (value === '') {
+			  suggestionsContainer.innerHTML = '';
+			  return;
+			}
+
+			try {
+			  const suggestions = await fetchSuggestions(value);
+			  displaySuggestions(suggestions);
+			} catch (error) {
+			  console.error('Error fetching suggestions:', error);
+			}
+		  });
+
+  searchButton.addEventListener('click', function () {
+    const searchInputValue = searchInput.value.trim();
+    if (searchInputValue !== '') {
+      // Redirect to search_results.html with the search query
+      window.location.href = `search_results.html?q=${encodeURIComponent(searchInputValue)}`;
+    }
+  });
+
+	function displaySuggestions(suggestions) {
+	  suggestionsContainer.innerHTML = '';
+
+	  if (suggestions.length > 0) {
+		suggestions.forEach((result) => {
+		  const suggestionOption = document.createElement('div');
+		  suggestionOption.classList.add('suggestion-option');
+
+		  const img = document.createElement('img');
+		  img.classList.add('suggestion-img');
+		  img.src = result.poster_path
+			? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+			: 'https://png.pngtree.com/element_our/png/20181205/question-mark-vector-icon-png_256683.jpg';
+		  suggestionOption.appendChild(img);
+
+		  const text = document.createElement('span');
+		  text.classList.add('suggestion-text');
+		  text.textContent = result.title || result.name;
+		  suggestionOption.appendChild(text);
+
+		  suggestionsContainer.appendChild(suggestionOption);
+
+			suggestionOption.addEventListener('click', function () {
+			  searchInput.value = text.textContent;
+			  suggestionsContainer.innerHTML = ''; // Clear suggestions after selection
+
+			  // Check if it's a movie or TV series and redirect accordingly
+			  if (result.media_type === 'movie') {
+				window.location.href = `movie_details.html?id=${result.id}`;
+			  } else if (result.media_type === 'tv') {
+				window.location.href = `tv_details.html?id=${result.id}`;
+			  } else {
+				console.error('Unknown media_type:', result.media_type);
+			  }
+			});
+			
+
+		});
+
+		suggestionsContainer.style.display = 'block'; // Show the suggestions dropdown
+	  } else {
+		suggestionsContainer.style.display = 'none'; // Hide the suggestions dropdown
+	  }
+	}
+
+
+
+    fetchAndDisplay('movie', 'latest-movies-container');
+    fetchAndDisplay('tv', 'latest-tv-container');
+  });
+  </script>
+<footer class="footercopy">All movie and TV show content displayed on this website is provided by third-party sources. The rights to the images, videos, and other media files belong to the respective owners or content providers. This website does not claim ownership of any content and only serves as a platform to showcase and link to external sources. For any inquiries or concerns regarding content, please contact the relevant content providers.&nbsp;</footer>
+</body>
+</html>
+
