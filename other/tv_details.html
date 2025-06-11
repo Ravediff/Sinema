@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="tv_details.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="tv_details.css" />
     <title>TV Show Details</title>
 </head>
 <body>
-    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
+    <div id="head">
+        <img class="logo" src="../img/LOGO.png" alt="Logo" />
+    </div>
     <div id="background-container"></div>
     <div id="tv-details-container">
-		<div class="season-episode-selector" id="season-episode-selector">
-            <!-- Add your season and episode selector dropdowns here -->
-            Season:
-            <select id="seasonSelector">
-                <!-- Options for seasons will be dynamically added here -->
-            </select>
-            Episode:
-            <select id="episodeSelector">
-                <!-- Options for episodes will be dynamically added here -->
-            </select>
+        <div class="season-episode-selector" id="season-episode-selector">
+            <div class="custom-dropdown" id="seasonDropdownContainer">
+                <button class="dropdown-button" id="seasonDropdownButton">Select Season</button>
+                <div class="dropdown-menu" id="seasonDropdownMenu"></div>
+            </div>
+
+            <div class="custom-dropdown" id="episodeDropdownContainer">
+                <button class="dropdown-button" id="episodeDropdownButton">Select Episode</button>
+                <div class="dropdown-menu" id="episodeDropdownMenu"></div>
+            </div>
+
+            <img id="playButton" src="../img/play.png" alt="Play Trailer" />
         </div>
         <!-- TV show details will be dynamically added here -->
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Retrieve TV show ID from the URL
             const urlParams = new URLSearchParams(window.location.search);
             const tvShowId = urlParams.get('id');
 
-            // Check if TV show ID is available
             if (tvShowId) {
-                // Fetch TV show details using the TV show ID
                 fetchTVShowDetails(tvShowId)
                     .then(displayTVShowDetails)
                     .catch((error) => console.error('Error fetching TV show details:', error));
@@ -61,19 +62,15 @@
             const tvDetailsContainer = document.getElementById('tv-details-container');
             const backgroundContainer = document.getElementById('background-container');
 
-            // Check if the container elements exist
             if (!tvDetailsContainer || !backgroundContainer) {
                 console.error('TV show details or background container not found.');
                 return;
             }
 
-            // Clear previous content
-            tvDetailsContainer.innerHTML = '';
+            // Clear previous details content only (keep dropdowns)
+            const existingDetails = tvDetailsContainer.querySelectorAll('h1, p, img.tv-show-cover');
+            existingDetails.forEach(el => el.remove());
 
-            // Create a new div for TV show details
-            const detailsDiv = document.createElement('div');
-
-            // Create elements to display TV show details
             const nameElement = document.createElement('h1');
             nameElement.textContent = tvShowDetails.name;
 
@@ -89,102 +86,94 @@
             const tvShowCoverElement = document.createElement('img');
             tvShowCoverElement.src = `https://image.tmdb.org/t/p/w500${tvShowDetails.poster_path}`;
             tvShowCoverElement.alt = tvShowDetails.name;
-            // Add the 'tv-show-cover' class to the image element
             tvShowCoverElement.classList.add('tv-show-cover');
 
-            // Create a new div for dropdowns
-            const dropdownDiv = document.createElement('div');
+            // VisionOS dropdowns
+            const seasonDropdownMenu = document.getElementById('seasonDropdownMenu');
+            const seasonDropdownButton = document.getElementById('seasonDropdownButton');
+            const episodeDropdownMenu = document.getElementById('episodeDropdownMenu');
+            const episodeDropdownButton = document.getElementById('episodeDropdownButton');
 
-            // Create a dropdown for seasons
-            const seasonLabel = document.createElement('label');
-            seasonLabel.textContent = 'Select Season: ';
-            const seasonDropdown = document.createElement('select');
-            seasonDropdown.id = 'seasonDropdown';
+            let selectedSeason = 1;
 
-            // Populate season dropdown dynamically based on available data
+            // Populate season dropdown
+            seasonDropdownMenu.innerHTML = '';
             for (let i = 1; i <= tvShowDetails.number_of_seasons; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `Season ${i}`;
-                seasonDropdown.appendChild(option);
+                const seasonOption = document.createElement('div');
+                seasonOption.textContent = `Season ${i}`;
+                seasonOption.addEventListener('click', () => {
+                    seasonDropdownButton.textContent = `Season ${i}`;
+                    selectedSeason = i;
+                    populateEpisodesDropdownVision(tvShowDetails, selectedSeason);
+                });
+                seasonDropdownMenu.appendChild(seasonOption);
             }
 
-            // Create a dropdown for episodes
-            const episodeLabel = document.createElement('label');
-            episodeLabel.textContent = 'Select Episode: ';
-            const episodeDropdown = document.createElement('select');
-            episodeDropdown.id = 'episodeDropdown';
+            // Populate initial episodes
+            populateEpisodesDropdownVision(tvShowDetails, selectedSeason);
 
-            // Initial population of episode dropdown based on the first season
-            populateEpisodesDropdown(tvShowDetails, episodeDropdown, 1);
-
-            // Add change event listener to season dropdown
-            seasonDropdown.addEventListener('change', function () {
-                const selectedSeason = parseInt(seasonDropdown.value);
-                // Populate episode dropdown based on the selected season
-                populateEpisodesDropdown(tvShowDetails, episodeDropdown, selectedSeason);
-            });
-
-            // Create an img element for the play button
-            const playButton = document.createElement('img');
-            playButton.id = 'playButton';
-            playButton.src = '../img/play.png'; // Replace with the path to your play button image
-            playButton.alt = 'Play Trailer';
-
-            // Add a click event listener to the play button
-            playButton.addEventListener('click', function () {
-                // Retrieve selected season and episode values
-                const selectedSeason = parseInt(seasonDropdown.value);
-                const selectedEpisode = parseInt(episodeDropdown.value);
-                // Redirect to TV show play page with the selected TV show ID, season, and episode
+            // Play button event
+            const playButton = document.getElementById('playButton');
+            playButton.addEventListener('click', () => {
+                const selectedEpisodeText = episodeDropdownButton.textContent;
+                const selectedEpisode = parseInt(selectedEpisodeText.replace('Episode ', ''));
                 window.location.href = `tv_play.html?id=${tvShowDetails.id}&season=${selectedSeason}&episode=${selectedEpisode}`;
             });
 
-            // Append elements to the dropdownDiv
-            dropdownDiv.appendChild(seasonLabel);
-            dropdownDiv.appendChild(seasonDropdown);
-            dropdownDiv.appendChild(episodeLabel);
-            dropdownDiv.appendChild(episodeDropdown);
-            // Append play button to the dropdownDiv
-            dropdownDiv.appendChild(playButton);
-
-            // Append dropdownDiv to the tvDetailsContainer
-            tvDetailsContainer.appendChild(dropdownDiv);
-
-            // Append TV show cover image to the container
+            // Append show details
             tvDetailsContainer.appendChild(tvShowCoverElement);
+            tvDetailsContainer.appendChild(nameElement);
+            tvDetailsContainer.appendChild(firstAirDateElement);
+            tvDetailsContainer.appendChild(overviewElement);
+            tvDetailsContainer.appendChild(voteAverageElement);
 
-            // Append elements to the detailsDiv
-            detailsDiv.appendChild(nameElement);
-            detailsDiv.appendChild(firstAirDateElement);
-            detailsDiv.appendChild(overviewElement);
-            detailsDiv.appendChild(voteAverageElement);
-
-            // Append TV show details and cover image to the container
-            tvDetailsContainer.appendChild(detailsDiv);
-
-            // Set background image
+            // Background image
             backgroundContainer.style.backgroundImage = `url('https://image.tmdb.org/t/p/w1280${tvShowDetails.backdrop_path}')`;
+
+            // Close dropdowns on click outside
+            document.addEventListener('click', (event) => {
+                if (!seasonDropdownMenu.contains(event.target) && event.target !== seasonDropdownButton) {
+                    seasonDropdownMenu.style.display = 'none';
+                }
+                if (!episodeDropdownMenu.contains(event.target) && event.target !== episodeDropdownButton) {
+                    episodeDropdownMenu.style.display = 'none';
+                }
+            });
+
+            // Toggle menus on button click
+            seasonDropdownButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                seasonDropdownMenu.style.display = seasonDropdownMenu.style.display === 'block' ? 'none' : 'block';
+            });
+            episodeDropdownButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                episodeDropdownMenu.style.display = episodeDropdownMenu.style.display === 'block' ? 'none' : 'block';
+            });
         }
 
-        function populateEpisodesDropdown(tvShowDetails, dropdown, selectedSeason) {
-            // Clear existing options
-            dropdown.innerHTML = '';
+        function populateEpisodesDropdownVision(tvShowDetails, selectedSeason) {
+            const episodeDropdownMenu = document.getElementById('episodeDropdownMenu');
+            const episodeDropdownButton = document.getElementById('episodeDropdownButton');
 
-            // Find the selected season
+            episodeDropdownMenu.innerHTML = '';
+
             const season = tvShowDetails.seasons.find(s => s.season_number === selectedSeason);
 
-            // Populate episode dropdown dynamically based on available data for the selected season
             if (season) {
                 for (let i = 1; i <= season.episode_count; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = `Episode ${i}`;
-                    dropdown.appendChild(option);
+                    const episodeOption = document.createElement('div');
+                    episodeOption.textContent = `Episode ${i}`;
+                    episodeOption.addEventListener('click', () => {
+                        episodeDropdownButton.textContent = `Episode ${i}`;
+                        episodeDropdownMenu.style.display = 'none';
+                    });
+                    episodeDropdownMenu.appendChild(episodeOption);
                 }
             }
+
+            // Reset episode button when season changes
+            episodeDropdownButton.textContent = 'Select Episode';
         }
     </script>
 </body>
 </html>
-

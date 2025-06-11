@@ -7,81 +7,105 @@
   <title>Search Results</title>
   <style>
 	body {
-	  background-image: url('../img/Background.jpg');
-	  background-size: cover;
-	  background-position: center;
-	  background-repeat: no-repeat;
-	  color: #333;
-	  font-family: 'Arial', sans-serif;
-	  margin: 0;
-	  padding: 0;
-	  overflow-x: hidden;
-	}
+    background-color: #000000;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #000000;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
 
-	.logo {
-	  width: 119px;
-	  height: 40px;
-	  order: 1;
-	  position: fixed;
-	  top: 10px;
-	  left: 10px;
-	  z-index: 1;
-	  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5); /* Black shadow */
-	  background-color: rgba(0,0,0,0.7) /* Add a background color to make the shadow visible */
-	}
+  .logo {
+    width: 119px;
+    height: 40px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 8px;
+    padding: 5px;
+  }
 
+  .container {
+    max-width: 1200px;
+    margin: 80px auto 40px auto;
+    padding: 30px;
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  h1 {
+    color: #fff;
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .movie-card {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+
+  .movie-details {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .movie-details p {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .movie-card img {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
     .container {
-      max-width: 800px;
-      margin: 50px auto;
+      margin: 60px 10px 30px 10px;
       padding: 20px;
-      background-color: rgba(0, 0, 0, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       font-size: 24px;
-      margin-bottom: 10px;
     }
 
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 20px;
+    .movie-card img {
+      height: 200px;
     }
+  }
 
-	.movie-card {
-	  cursor: pointer;
-	  transition: transform 0.2s ease-in-out;
-	  height: 300px; /* Set a fixed height for the movie cards */
-	  display: flex;
-	  flex-direction: column;
-	  overflow: hidden; /* Hide any overflowing content */
-	}
-
-	.movie-card:hover {
-	  transform: scale(1.05);
-	}
-
-	.movie-details {
-	  text-align: center;
-	  margin-bottom: 10px;
-	  height: 100%; /* Set a fixed height for the movie details section */
-	}
-
-	.movie-details p {
-		color: white;
-	  font-size: 16px;
-	  line-height: 1.5;
-	  margin: 0; /* Remove default margin to ensure consistent spacing */
-	}
-
-	.movie-details img {
-	  max-width: 100%;
-	  height: 100%; /* Adjust the image height to fill the entire .movie-details section */
-	  object-fit: cover; /* Ensure the image covers the entire space without stretching */
-	  border-radius: 8px;
-	}
 
 
   </style>
@@ -128,6 +152,9 @@
 
       // Create a grid item for each result
       results.forEach(result => {
+        if (!result.poster_path) {
+            return; // Skip results with no image
+        }
         const gridItem = document.createElement('div');
         gridItem.classList.add('movie-card');
 

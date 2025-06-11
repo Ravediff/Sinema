@@ -1,22 +1,22 @@
+@charset "utf-8";
+
+/* Base styles */
 body {
   background-color: #000;
   color: #fff;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
 
 .logo {
-  width: 119px;
-  height: 40px;
-  order: 1;
+  width: 150px;
+  height: auto;
   position: fixed;
   top: 10px;
   left: 10px;
-  z-index: 1;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5); /* Black shadow */
-  background-color: rgba(0, 0, 0, 0.7); /* Add a background color to make the shadow visible */
+  z-index: 2;
 }
 
 #background-container {
@@ -26,72 +26,172 @@ body {
   width: 100%;
   height: 100%;
   background-size: cover;
+  background-position: center;
   filter: blur(10px);
+  z-index: 0;
 }
 
 #tv-details-container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  max-width: 900px;
+  margin: 120px auto 50px auto;
+  padding: 30px;
+  backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 1;
-  overflow: hidden; /* Add overflow property to fix the background visibility issue */
-}
-
-.season-episode-selector {
-  position: absolute;
-  top: 10px; /* Adjust the top position as needed */
-  right: 10px; /* Adjust the right position as needed */
-  display: flex; /* Make the dropdowns and button align horizontally */
-  flex-direction: row; /* Align items in a row */
-  align-items: center; /* Center items vertically */
-}
-
-/* Adjust the margin-right property to create space between the drop-downs */
-#seasonDropdown, #episodeDropdown {
-  margin-right: 200px; /* Adjust as needed */
-}
-
-#playButton {
-  cursor: pointer;
-  width: 10%;
-}
-
-
-#playButton {
-  position: absolute;
-  top: 10%; /* Adjust as needed */
-  left: 93%; /* Adjust as needed */
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  width: 10%;
-}
-
-#playButton:hover {
-  opacity: 0.8; /* Adjust the opacity on hover as needed */
+  text-align: center;
 }
 
 .tv-show-cover {
-  width: 30%; /* Use 100% width for responsiveness */
-  max-width: 100%; /* Ensure the image does not exceed its original size */
-  height: auto; /* Maintain the aspect ratio */
-  display: block;
-  margin: 0 auto;
-  border-radius: 8px;
-  padding-right: 900px;
+  max-width: 300px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.season-episode-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.season-episode-selector label {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+#seasonDropdown, #episodeDropdown {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#seasonDropdown:hover, #episodeDropdown:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+#playButton {
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.85;
+}
+
+#playButton:hover {
+  transform: scale(1.1);
+  opacity: 1;
 }
 
 h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin-bottom: 15px;
+  font-weight: 600;
 }
 
 p {
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 18px;
+  line-height: 1.6;
   margin-bottom: 15px;
 }
 
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  min-width: 180px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 8px 0;
+  z-index: 10;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-menu div {
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu div:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  #tv-details-container {
+    margin: 100px 20px 30px 20px;
+    padding: 20px;
+  }
+
+  .tv-show-cover {
+    max-width: 200px;
+  }
+
+  #playButton {
+    width: 60px;
+    height: 60px;
+  }
+
+  .season-episode-selector {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+}

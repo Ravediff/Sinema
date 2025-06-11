@@ -1,9 +1,11 @@
+@charset "utf-8";
+
+/* Base styles */
 body {
-    position: relative;
-    color: #AEAEAE;
-    text-align: center;
-    margin: 0;
-    font-family: 'Impact', sans-serif;
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
 }
 
 body::before {
@@ -13,90 +15,159 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url(../img/Background.jpg);
-  background-size: cover;
-  filter: blur(2px); /* Adjust the blur effect as needed */
-  z-index: -1; /* Place the pseudo-element behind the content */
+  background: linear-gradient(180deg, #141414 0%, #000000 100%);
+  z-index: -1;
 }
 
-
-
+/* Container */
 .container {
-  max-width: 1049px;
+  max-width: 1300px;
   margin: 0 auto;
+  padding: 20px;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   padding: 20px 0;
 }
+
 .logo {
-  width: 119px;
-  height: 40px;
-  order: 1;
+  width: 150px;
+  height: auto;
 }
 
+/* New flexbox layout for search-bar */
 .search-bar {
-  position: relative;
   width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.search-bar-inner {
   display: flex;
   align-items: center;
-  order: 2;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 0 12px;
+  height: 48px;
 }
 
-.search-button {
-	padding-left: 5px;
-	height: 33px;
-	width: 37px
-}
 .search-image {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  height: 70%;
-	width: 700px
+  flex-shrink: 0;
+  margin-right: 8px;
+  opacity: 0.8;
 }
 
 .search-input {
-  width: calc(100% - 30px);
-  max-width: 700px;
-  height: 45px;
+  flex: 1;
   border: none;
-  padding: 5px;
-  padding-left: 30px;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0);
-  color: #000000;
-  outline: none;
+  background: transparent;
+  color: #fff;
   font-size: 16px;
-  font-family: 'Impact', sans-serif;
-	z-index: 2
+  outline: none;
+}
+
+.search-button {
+  flex-shrink: 0;
+  margin-left: 8px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.search-button:hover {
+  opacity: 1;
 }
 
 
+/* Discover */
+.discover-screen {
+  margin-top: 40px;
+}
+
+.discovery-box {
+  display: flex;
+  overflow-x: auto;
+  padding: 20px 0;
+  gap: 20px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.discovery-box::-webkit-scrollbar {
+  display: none;
+}
+
+.discovery-box {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.banner {
+  position: relative;
+  flex: 0 0 auto;
+  width: 800px;
+  border-radius: 12px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.banner:hover {
+  transform: scale(1.05);
+}
+
+.banner-tooltip {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background-color: rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: none;
+  color: #fff;
+}
+
+.banner:hover .banner-tooltip {
+  display: block;
+}
+
+/* Latest Content */
 .latest-content {
-    margin-top: 20px;
-    position: relative;
-    font-family: 'Impact', sans-serif;
-    text-align: justify;
+  margin-top: 50px;
 }
 
 .title-bar {
-  height: 3px;
-  width: 50px;
-  background-color: #000;
+  height: 4px;
+  width: 60px;
+  background: linear-gradient(90deg, #e50914, #ff6e6e);
+  border-radius: 2px;
   margin-bottom: 10px;
 }
 
 .movies-container {
   display: flex;
   overflow-x: auto;
-  width: 1200px;
-  margin-bottom: 20px;
-  overflow-y: hidden;
+  padding: 20px 0;
+  gap: 15px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -107,13 +178,17 @@ body::before {
 
 .movie-card {
   flex: 0 0 auto;
-  height: 290px;
-  width: 200px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  width: 220px;
+  height: 330px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
   overflow: hidden;
-  margin-right: 20px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .movie-card img {
@@ -122,155 +197,124 @@ body::before {
   object-fit: cover;
 }
 
-.movie-card,
-.movie-card h3 {
-  padding: 10px;
-  margin: 0;
-  font-size: 14px;
+.movie-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9);
 }
 
-.movie-card,
-.tv-card {
-  position: relative;
-  overflow: hidden;
-  margin: 10px;
-  transition: transform 0.3s ease;
-}
-
-.movie-card:hover,
-.tv-card:hover {
-  transform: scale(1.05);
-}
-
-.movie-details,
-.tv-details {
+.movie-details {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
   padding: 10px;
   text-align: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+  color: #fff;
+  font-weight: 500;
 }
 
-.movie-card:hover .movie-details,
-.tv-card:hover .tv-details {
+.movie-card:hover .movie-details {
   opacity: 1;
 }
 
+/* Suggestions */
 #suggestions-container {
   position: absolute;
-  width: 75%;
-  max-height: 200px;
-  overflow-y: hidden;
-  border: 1px solid #ccc;
-  background-color: rgba(164, 224, 216, 0.8);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  backdrop-filter: blur(15px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  padding: 8px 0;
+  z-index: 5;
   top: 100%;
+  left: 0;
 }
-
 
 .suggestion-option {
   display: flex;
   align-items: center;
-  padding: 5px;
+  padding: 8px 16px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.suggestion-option:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .suggestion-img {
   width: 30px;
   height: 40px;
   margin-right: 10px;
+  border-radius: 6px;
   object-fit: cover;
 }
 
 .suggestion-text {
-	color: black;
   flex-grow: 1;
+  color: #fff;
+  font-weight: 500;
 }
 
-.footercopy {
-	margin: 30px 300px;
-	font-size: 13px;
+/* Scroll buttons (SVG) */
+.scroll-button svg {
+  width: 40px;
+  height: 40px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
-/* Add this CSS to your existing styles */
-.dropdown {
-  display: inline-block;
+.scroll-button svg:hover {
+  opacity: 1;
 }
 
-.dropbtn {
-  background-color: #3498db;
-  color: white;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.dropdown-content {
-  display: none;
+  .search-bar {
+    width: 93%;
+    margin-top: 10px;
+
+  }
+
+  .search-bar-inner {
+    width: 100%;
+    height: 48px;
+  }
+
+  .discovery-box {
+    padding: 10px 0;
+  }
+
+  .banner {
+    width: 300px;
+  }
+
+  .movies-container {
+    padding: 10px 0;
+  }
+
+  .movie-card {
+    width: 150px;
+    height: 220px;
+  }
+
+  #suggestions-container {
   position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  width: 107%;
+
 }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #2980b9;
-}
-
-.dropbtn {
-  cursor: pointer;
-  width: 20px; /* Adjust the width as needed */
-  height: 20px; /* Adjust the height as needed */
-  margin-right: 10px; /* Adjust the margin as needed */
-  border: none;
-  background: transparent; /* Set a transparent background */
-}
-
-.dropbtn:hover {
-  /* Add any hover styles if needed */
-}
-
-/* Additional styling for the dropdown arrow image */
-.dropbtn img {
-  width: 100%;
-  height: 100%;
-}
-
-.nested-dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  z-index: 2;
-  left: 100%;
-  top: 0;
-}
-
-.dropdown-section:hover .nested-dropdown-content {
-  display: block;
 }
 

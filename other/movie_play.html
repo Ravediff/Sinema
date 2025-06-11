@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="movie_play.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="movie_play.css" />
     <title>Movie Play</title>
 </head>
 <body>
-    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
-
+    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo" /></div>
+    <div id="background-container"></div>
     <div id="movie-play-container">
+        <div id="adblocker-overlay">Loading...</div>
+        <!-- Movie iframe will be added here -->
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
             const urlParams = new URLSearchParams(window.location.search);
             const movieId = urlParams.get('id');
 
-
             if (movieId) {
-
                 fetchMoviePlayDetails(movieId)
                     .then(displayMoviePlayDetails)
                     .catch((error) => console.error('Error fetching movie play details:', error));
@@ -33,24 +32,35 @@
             return { movieId };
         }
 
+        (async function() {
+            if (navigator.brave && await navigator.brave.isBrave()) {
+                console.log('User is using Brave - good!');
+            } else {
+                alert('For best experience, please use Brave browser or install uBlock Origin.');
+            }
+        })();
+        
         function displayMoviePlayDetails(moviePlayDetails) {
             const moviePlayContainer = document.getElementById('movie-play-container');
 
- 
             if (!moviePlayContainer) {
                 console.error('Movie play container not found.');
                 return;
             }
 
-
             const movieIframe = document.createElement('iframe');
-            movieIframe.src = `https://vidsrc.me/embed/movie?tmdb=${moviePlayDetails.movieId}`;
+            movieIframe.src = `https://vidlink.pro/movie/${moviePlayDetails.movieId}?player=jw`;
             movieIframe.style.width = '100%';
             movieIframe.style.height = '100%';
             movieIframe.frameBorder = '0';
             movieIframe.referrerPolicy = 'origin';
             movieIframe.allowFullscreen = true;
+    
 
+            movieIframe.onload = () => {
+                const overlay = document.getElementById('adblocker-overlay');
+                overlay.style.display = 'none';
+            };
 
             moviePlayContainer.appendChild(movieIframe);
         }

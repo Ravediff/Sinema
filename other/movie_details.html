@@ -7,7 +7,9 @@
     <title>Movie Details</title>
 </head>
 <body>
-    <div id="head"><img class="logo" src="../img/LOGO.png" alt="Logo"></div>
+    <div id="head">
+        <img class="logo" src="../img/LOGO.png" alt="Logo">
+    </div>
     <div id="background-container"></div>
     <div id="movie-details-container">
         <!-- Movie details will be dynamically added here -->
@@ -15,13 +17,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Retrieve movie ID from the URL
             const urlParams = new URLSearchParams(window.location.search);
             const movieId = urlParams.get('id');
 
-            // Check if movie ID is available
             if (movieId) {
-                // Fetch movie details using the movie ID
                 fetchMovieDetails(movieId)
                     .then(displayMovieDetails)
                     .catch((error) => console.error('Error fetching movie details:', error));
@@ -46,73 +45,56 @@
             }
         }
 
-		function displayMovieDetails(movieDetails) {
-			const movieDetailsContainer = document.getElementById('movie-details-container');
-			const backgroundContainer = document.getElementById('background-container');
+        function displayMovieDetails(movieDetails) {
+            const movieDetailsContainer = document.getElementById('movie-details-container');
+            const backgroundContainer = document.getElementById('background-container');
 
-			// Check if the container elements exist
-			if (!movieDetailsContainer || !backgroundContainer) {
-				console.error('Movie details or background container not found.');
-				return;
-			}
+            if (!movieDetailsContainer || !backgroundContainer) {
+                console.error('Movie details or background container not found.');
+                return;
+            }
 
-			// Clear previous content
-			movieDetailsContainer.innerHTML = '';
+            movieDetailsContainer.innerHTML = '';
 
-			// Create a new div for movie details
-			const detailsDiv = document.createElement('div');
+            const detailsDiv = document.createElement('div');
+            detailsDiv.classList.add('details-content');
 
-			// Create elements to display movie details
-			const titleElement = document.createElement('h1');
-			titleElement.textContent = movieDetails.title;
+            const movieCoverElement = document.createElement('img');
+            movieCoverElement.src = `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`;
+            movieCoverElement.alt = movieDetails.title;
+            movieCoverElement.classList.add('movie-cover');
 
-			const releaseDateElement = document.createElement('p');
-			releaseDateElement.textContent = `Release Date: ${movieDetails.release_date}`;
+            const playButton = document.createElement('img');
+            playButton.id = 'playButton';
+            playButton.src = '../img/play.png';
+            playButton.alt = 'Play Trailer';
 
-			const overviewElement = document.createElement('p');
-			overviewElement.textContent = `Overview: ${movieDetails.overview}`;
+            playButton.addEventListener('click', function () {
+                window.location.href = `movie_play.html?id=${movieDetails.id}`;
+            });
 
-			const voteAverageElement = document.createElement('p');
-			voteAverageElement.textContent = `Vote Average: ${movieDetails.vote_average}`;
+            const titleElement = document.createElement('h1');
+            titleElement.textContent = movieDetails.title;
 
-			const movieCoverElement = document.createElement('img');
-			movieCoverElement.src = `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`;
-			movieCoverElement.alt = movieDetails.title;
-			// Add the 'movie-cover' class to the image element
-			movieCoverElement.classList.add('movie-cover');
+            const releaseDateElement = document.createElement('p');
+            releaseDateElement.textContent = `Release Date: ${movieDetails.release_date}`;
 
-			// Create an img element for the play button
-			const playButton = document.createElement('img');
-			playButton.id = 'playButton';
-			playButton.src = '../img/play.png'; // Replace with the path to your play button image
-			playButton.alt = 'Play Trailer';
+            const overviewElement = document.createElement('p');
+            overviewElement.textContent = `Overview: ${movieDetails.overview}`;
 
-			// Add a click event listener to the play button
-			playButton.addEventListener('click', function () {
-				// Redirect to movie play page with the selected movie ID
-				window.location.href = `movie_play.html?id=${movieDetails.id}`;
-			});
+            const voteAverageElement = document.createElement('p');
+            voteAverageElement.textContent = `Vote Average: ${movieDetails.vote_average}`;
 
-			// Append movie cover image to the container
-			movieDetailsContainer.appendChild(movieCoverElement);
-			// Append play button to the detailsDiv
-			detailsDiv.appendChild(playButton);
+            movieDetailsContainer.appendChild(movieCoverElement);
+            detailsDiv.appendChild(playButton);
+            detailsDiv.appendChild(titleElement);
+            detailsDiv.appendChild(releaseDateElement);
+            detailsDiv.appendChild(overviewElement);
+            detailsDiv.appendChild(voteAverageElement);
+            movieDetailsContainer.appendChild(detailsDiv);
 
-			// Append elements to the detailsDiv
-			detailsDiv.appendChild(titleElement);
-			detailsDiv.appendChild(releaseDateElement);
-			detailsDiv.appendChild(overviewElement);
-			detailsDiv.appendChild(voteAverageElement);
-
-			// Append movie details and cover image to the container
-			movieDetailsContainer.appendChild(detailsDiv);
-
-			// Set background image
-			backgroundContainer.style.backgroundImage = `url('https://image.tmdb.org/t/p/w1280${movieDetails.backdrop_path}')`;
-		}
+            backgroundContainer.style.backgroundImage = `url('https://image.tmdb.org/t/p/w1280${movieDetails.backdrop_path}')`;
+        }
     </script>
 </body>
 </html>
-
-
-
