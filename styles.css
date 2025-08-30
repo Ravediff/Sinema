@@ -99,6 +99,27 @@ body {
     padding: 10px;
 }
 
+.hero-content {
+    animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-content {
+        animation: none;
+    }
+}
+
 
 /* Mobile optimization */
 @media (max-width: 768px) {
